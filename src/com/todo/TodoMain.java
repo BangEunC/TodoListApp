@@ -64,7 +64,28 @@ public class TodoMain {
 			case "exit":
 				quit = true;
 				break;
-
+			
+			case "find":
+				String keyword = sc.nextLine().trim();
+				TodoUtil.findList(l, keyword);
+				break;
+				
+			case "ls_date_desc":
+				l.sortByDate();
+				l.reverseList();
+				System.out.println("날짜역순으로 정렬하였습니다.");
+				isList = true;
+				break;
+			
+			case "ls_cate":
+				TodoUtil.listCateAll(l);
+				break;
+				
+			case "find_cate":
+				String cate = sc.nextLine().trim();
+				TodoUtil.findCateList(l, cate);
+				break;
+				
 			default:
 				System.out.println("정확한 명령어를 입력하세요. (도움말 - help)");
 				break;

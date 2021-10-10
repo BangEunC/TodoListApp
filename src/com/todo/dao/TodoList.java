@@ -1,5 +1,8 @@
 package com.todo.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*; 
 
 import com.todo.service.TodoSortByDate;
@@ -10,6 +13,10 @@ public class TodoList {
 
 	public TodoList() {
 		this.list = new ArrayList<TodoItem>();
+	}
+	
+	public TodoItem getItem(int index) {
+		return list.get(index);	
 	}
 
 	public void addItem(TodoItem t) {
@@ -26,7 +33,17 @@ public class TodoList {
 		list.add(updated);
 	}
 
-	public ArrayList<TodoItem> getList() {
+	public ArrayList<TodoItem> getList(String keyword) {
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		PreparedStatement pstmt;
+		keyword = "%"+keyword+"%";
+		try {
+			String sql = "SELECT * FROM list WHERE title like ? or memo like ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,keyword);
+			pstmt.setString(2,keyword);
+			ResultSet rs = pstmt.executeQuery();
+		}
 		return new ArrayList<TodoItem>(list);
 	}
 
@@ -60,5 +77,32 @@ public class TodoList {
 			if (title.equals(item.getTitle())) return true;
 		}
 		return false;
+	}
+
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public ArrayList<TodoItem> getListCategory(String keyword) {
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		PreparedStatement pstmt;
+		try {
+			String sql = "SELECT * FROM list WHERE category = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			ResultSet re = pstmt.executeQuery();
+		}
+		return null;
+	}
+
+	public ArrayList<String> getCategories() {
+		ArrayList<String> list = new ArrayList<String>();
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT DISTINCT category FROM list";
+			ResultSet rs = stmt.executeQuery(sql);
+		}
 	}
 }
